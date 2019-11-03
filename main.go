@@ -26,12 +26,12 @@ func main() {
 
 	// create the quick view
 	// with a minimum size of 250*200
-	// set the window title to "Hello QML/Quick Example"
+	// set the window title to "Simple P2P Broadcast"
 	// and let the root item of the view resize itself to the size of the view automatically
 	view := quick.NewQQuickView(nil)
-	view.SetMinimumSize(core.NewQSize2(250, 200))
+	view.SetMinimumSize(core.NewQSize2(650, 450))
 	view.SetResizeMode(quick.QQuickView__SizeRootObjectToView)
-	view.SetTitle("Hello QML/Quick Example")
+	view.SetTitle("Simple P2P Broadcast Example")
 
 	// load the embedded qml file
 	// created by either qtrcc or qtdeploy
