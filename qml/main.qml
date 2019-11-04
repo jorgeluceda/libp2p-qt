@@ -15,8 +15,8 @@ Column {
 
 		Pane {
 			Material.elevation: 6
-			implicitWidth: 600
-			implicitHeight: 400
+			implicitWidth: 650
+			implicitHeight: 500
 			Label {
 				id: topologyCard
 				Column {
@@ -30,20 +30,27 @@ Column {
 
 					Text {
 						// anchors.horizontalCenter: topologyCardContents.horizontalCenter
-						text: qsTr("Current amount of nodes <b> {5} </b>")
+						text: qsTr("Current number of nodes: <b>" + ctxObject.nodeAmount + " </b>")
 						font.family: Roboto
 					}
 
-
-					Slider {
-						from: 1
-						value: 5
-						to: 10
-						stepSize: 1
-						snapMode: SnapAlways
-						// tickmarksEnabled: true
+					Row {
+						spacing: 20
+						Button {
+							// anchors.horizontalCenter: topologyCardContents.horizontalCenter
+							text: qsTr("Decrease Node Amount")
+							font.family: Roboto
+							onClicked: ctxObject.decreased()
+						}
+						Button {
+							// anchors.horizontalCenter: topologyCardContents.horizontalCenter
+							text: qsTr("Increase Node Amount")
+							font.family: Roboto
+							onClicked: ctxObject.increased()
+						}
 					}
 
+					
 					//A good separator to keep away the rats 
 					MenuSeparator {
 						padding: 0
@@ -58,12 +65,13 @@ Column {
 					}
 
 					Grid {
-						padding: 20
+						// padding: 20
 						spacing: 20
 						// ...
+						anchors.horizontalCenter: topologyCardContents.horizontalCenter
 
 						Repeater {
-							model: 5
+							model: ctxObject.nodeAmount
 							delegate: Button {
 								height: 70
 								text: qsTr("Received!")
@@ -91,95 +99,3 @@ Column {
 		
 	}
 }
-
-
-// ColumnLayout {
-// 	id: column
-
-// 	Item {
-// 		width: 700
-// 		height: 550
-// 		anchors.horizontalCenter: column.horizontalCenter
-// 		Item {
-// 			id: container
-// 			anchors.centerIn: parent
-// 			width:  rect.width  + (2 * rectShadow.radius)
-// 			height: rect.height + (2 * rectShadow.radius)
-// 			visible: false
-
-// 			Rectangle {
-// 				id: rect
-// 				width: 650
-// 				height: 525
-// 				color: "#f2f2f2"
-// 				radius: 7
-// 				antialiasing: true
-// 				anchors.centerIn: parent
-
-// 				border {
-// 					width: 2
-// 					color: "#f2f2f2"
-// 				}
-
-// 				Button {
-// 					text: "<b>Network Topology Established</i>"
-// 				}
-// 			}
-// 		}
-
-// 		DropShadow {
-// 			id: rectShadow
-// 			anchors.fill: source
-// 			cached: true
-// 			horizontalOffset: 1
-// 			verticalOffset: 1
-// 			radius: 8.0
-// 			samples: 16
-// 			color: "#f2f2f2"
-// 			smooth: true
-// 			source: container
-// 		}
-// 	}
-
-// 	Item {
-// 		width: 700
-// 		height: 250
-// 		anchors.horizontalCenter: column.horizontalCenter
-// 		Item {
-// 			id: container2
-// 			anchors.centerIn: parent
-// 			width:  rect2.width  + (2 * rectShadow.radius)
-// 			height: rect2.height + (2 * rectShadow.radius)
-// 			visible: false
-
-// 			Rectangle {
-// 				id: rect2
-// 				width: 650
-// 				height: 200
-// 				color: "#dbdbdb"
-// 				radius: 7
-// 				antialiasing: true
-// 				border {
-// 					width: 2
-// 					color: "#dbdbdb"
-// 				}
-// 				anchors.centerIn: parent
-// 			}
-// 		}
-
-// 		DropShadow {
-// 			id: rectShadow2
-// 			anchors.fill: source
-// 			cached: true
-// 			horizontalOffset: 1
-// 			verticalOffset: 1
-// 			radius: 8.0
-// 			samples: 16
-// 			color: "#dbdbdb"
-// 			smooth: true
-// 			source: container2
-// 		}
-// 	}
-
-// }
-
