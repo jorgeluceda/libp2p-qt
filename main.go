@@ -11,25 +11,6 @@ import (
 	"github.com/therecipe/qt/widgets"
 )
 
-// func init() { CustomListModel_QmlRegisterType2("CustomQmlTypes", 1, 0, "CustomListModel") }
-
-// type ListItem struct {
-// 	firstName string
-// 	lastName  string
-// }
-
-// type CustomListModel struct {
-// 	core.QAbstractListModel
-
-// 	_ func() `constructor:"init"`
-
-// 	// _ func()                                  `signal:"remove,auto"`
-// 	// _ func(obj []*core.QVariant)              `signal:"add,auto"`
-// 	// _ func(firstName string, lastName string) `signal:"edit,auto"`
-
-// 	modelData []ListItem
-// }
-
 type CtxObject struct {
 	core.QObject
 
@@ -42,14 +23,20 @@ type CtxObject struct {
 }
 
 func (t *CtxObject) init() {
-	t.SetNodeAmount(int64(5))
-	currNodeAmount = 5
+	t.SetNodeAmount(int64(2))
+	currNodeAmount = 16
 }
 
 func (t *CtxObject) increased() {
 	currNodeAmount++
 
 	t.SetNodeAmount(currNodeAmount)
+	// for i := 0; i < 16; i++ {}
+	var n = NewNode(nil)
+
+	n.SetNodeName("Node " + strconv.Itoa(int(currNodeAmount-1)))
+	n.SetNodeMessage("N/A")
+	model.AddNode(n)
 	fmt.Println("Current Nodes:" + strconv.Itoa(int(currNodeAmount)))
 }
 
@@ -78,6 +65,7 @@ func (t *TopologyObject) init() {
 }
 
 var currNodeAmount int64
+var model = NewNodeModel(nil)
 
 func main() {
 
@@ -99,6 +87,15 @@ func main() {
 	// set the window title to "Simple P2P Broadcast"
 	// and let the root item of the view resize itself to the size of the view automatically
 	view := quick.NewQQuickView(nil)
+
+	for i := 0; i < 16; i++ {
+		var n = NewNode(nil)
+
+		n.SetNodeName("RECEIVED!")
+		n.SetNodeMessage("N/A")
+		model.addNode(n)
+	}
+
 	view.SetMinimumSize(core.NewQSize2(700, 550))
 	view.SetResizeMode(quick.QQuickView__SizeRootObjectToView)
 	view.SetTitle("Simple P2P Broadcast Example")
@@ -107,7 +104,7 @@ func main() {
 	view.RootContext().SetContextProperty("ctxObject", NewCtxObject(nil))
 
 	// make new context property for the node counter
-	view.RootContext().SetContextProperty("topologyObject", NewTopologyObject(nil))
+	view.RootContext().SetContextProperty("NodeModel", model)
 
 	// load the embedded qml file
 	// created by either qtrcc or qtdeploy
@@ -115,6 +112,10 @@ func main() {
 	// you can also load a local file like this instead:
 	//view.SetSource(core.QUrl_FromLocalFile("./qml/main.qml"))
 
+	// go func {
+	// 	time.sleep(2 * time.Seconds)
+
+	// }
 	// make the view visible
 	view.Show()
 

@@ -1,9 +1,8 @@
-import QtQuick 2.7			//Item
-import QtQuick.Controls 2.1	//Dialog
-import QtQuick.Layouts 1.13 //GridLayout
-import QtGraphicalEffects 1.12
-import QtQuick.Controls.Material 2.12 //Material Style imports
-
+import QtQuick 2.7						//Item
+import QtQuick.Controls 2.1				//Dialog
+import QtQuick.Layouts 1.13 			//GridLayout
+import QtGraphicalEffects 1.12			//DropShadow
+import QtQuick.Controls.Material 2.12 	//Material Style imports
 Column {
 	id: mainColumn
 	Pane {
@@ -71,10 +70,11 @@ Column {
 						anchors.horizontalCenter: topologyCardContents.horizontalCenter
 
 						Repeater {
-							model: ctxObject.nodeAmount
+							model: NodeModel
+							// delegate: Text { text: display }
 							delegate: Button {
 								height: 70
-								text: qsTr("Received!")
+								text: nodeName
 								checkable: true
 							}
 						}
@@ -93,9 +93,7 @@ Column {
 						}
 					}
 				}
-
 			}
-		}
-		
+		}	
 	}
 }
