@@ -9,7 +9,6 @@ const (
 	NodeMessage
 )
 
-// func init() { CustomListModel_QmlRegisterType2("CustomQmlTypes", 1, 0, "CustomListModel") }
 type NodeModel struct {
 	core.QAbstractListModel
 

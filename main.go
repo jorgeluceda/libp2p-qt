@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"sync"
+
+	p2pcore "github.com/libp2p/go-libp2p-core"
 
 	"github.com/therecipe/qt/core"
 	"github.com/therecipe/qt/quick"
@@ -47,12 +50,36 @@ func (t *CtxObject) decreased() {
 	fmt.Println("Current Nodes:" + strconv.Itoa(int(currNodeAmount)))
 }
 
+// setupHosts is responsible for creating libp2p hosts.
+func setupHosts(n int, initialPort int) ([]*libp2pPubSub, []*p2pcore.Host) {
+	// hosts used in libp2p communications
+	hosts := make([]*p2pcore.Host, n)
+	pubSubs := make([]*libp2pPubSub, n)
+
+	for i := range hosts {
+
+		pubsub := new(libp2pPubSub)
+
+		// creating libp2p hosts
+		host := pubsub.createPeer(i, initialPort+i)
+		hosts[i] = host
+		nodesMap[(*host).ID().Pretty()] = i
+		// creating pubsubs
+		pubsub.initializePubSub(*host)
+		pubSubs[i] = pubsub
+	}
+	return pubSubs, hosts
+}
+
 var currNodeAmount int64
 var model = NewNodeModel(nil)
 
 // const StartingNodes int64 = 2
-const MinNodes int64 = 2
+const MinNodes int64 = 5
 const MaxNodes int64 = 16
+
+// used to map a hashed Node ID to its position
+var nodesMap = make(map[string]int)
 
 func main() {
 
@@ -100,6 +127,44 @@ func main() {
 
 	// make the view visible
 	view.Show()
+
+	go func() {
+		//start topology
+		n := int(MinNodes)
+		initialPort := 9900
+
+		// Create hosts in libp2p
+		pubSubs, hosts := setupHosts(n, initialPort)
+
+		defer func() {
+			fmt.Println("Closing hosts")
+			for _, h := range hosts {
+				_ = (*h).Close()
+			}
+		}()
+
+		setupNetworkTopology(hosts)
+
+		wg := &sync.WaitGroup{}
+
+		for i, host := range hosts {
+
+			wg.Add(1)
+			go func(host *p2pcore.Host, pubSub *libp2pPubSub) {
+
+				_, msg := pubSub.Receive()
+
+				fmt.Printf("Node %s received Message: '%s'\n", (*host).ID().Pretty(), msg)
+
+				model.editNode(nodesMap[(*host).ID().Pretty()], "", msg)
+
+			}(host, pubSubs[i])
+		}
+		fmt.Println("Broadcasting a message on node 0...")
+		pubSubs[0].Broadcast("Testing PubSub")
+		wg.Wait()
+		fmt.Println("The END")
+	}()
 
 	// NOTE:
 	// In a go routine: this is ideally how you would

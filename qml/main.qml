@@ -97,7 +97,7 @@ Column {
 									id: nodeDialog
 									Material.accent: Material.Teal
 									Material.theme: Material.Light
-									width: 250
+									width: 300
 									height: 250
 									x: (mainPane.width - width) * 0.5
 									y: (mainPane.height - height) * 0.5
