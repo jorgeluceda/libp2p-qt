@@ -86,6 +86,7 @@ Column {
 							// delegate: Text { text: display }
 							delegate: Button {
 								height: 70
+								width: 80
 								text: nodeName
 								checkable: true
 							}
