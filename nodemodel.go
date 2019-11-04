@@ -43,6 +43,10 @@ func (m *NodeModel) init() {
 	m.ConnectRowCount(m.rowCount)
 	m.ConnectColumnCount(m.columnCount)
 	m.ConnectRoleNames(m.roleNames)
+
+	m.ConnectAddNode(m.addNode)
+	m.ConnectEditNode(m.editNode)
+	m.ConnectRemoveNode(m.removeNode)
 }
 
 func (m *NodeModel) data(index *core.QModelIndex, role int) *core.QVariant {

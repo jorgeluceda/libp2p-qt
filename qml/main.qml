@@ -39,13 +39,25 @@ Column {
 							// anchors.horizontalCenter: topologyCardContents.horizontalCenter
 							text: qsTr("Decrease Node Amount")
 							font.family: Roboto
-							onClicked: ctxObject.decreased()
+							onClicked: {
+								if(ctxObject.nodeAmount == 2) {
+
+								} else {
+									ctxObject.decreased()
+								}
+							}
 						}
 						Button {
 							// anchors.horizontalCenter: topologyCardContents.horizontalCenter
 							text: qsTr("Increase Node Amount")
 							font.family: Roboto
-							onClicked: ctxObject.increased()
+							onClicked: {
+								if(ctxObject.nodeAmount == 16) {
+
+								} else {
+									ctxObject.increased()
+								}
+							}
 						}
 					}
 

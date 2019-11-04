@@ -23,8 +23,8 @@ type CtxObject struct {
 }
 
 func (t *CtxObject) init() {
-	t.SetNodeAmount(int64(2))
-	currNodeAmount = 16
+	t.SetNodeAmount(int64(MinNodes))
+	currNodeAmount = MinNodes
 }
 
 func (t *CtxObject) increased() {
@@ -37,35 +37,22 @@ func (t *CtxObject) increased() {
 	n.SetNodeName("Node " + strconv.Itoa(int(currNodeAmount-1)))
 	n.SetNodeMessage("N/A")
 	model.AddNode(n)
-	fmt.Println("Current Nodes:" + strconv.Itoa(int(currNodeAmount)))
 }
 
 func (t *CtxObject) decreased() {
 	currNodeAmount--
 
 	t.SetNodeAmount(currNodeAmount)
+	model.RemoveNode(int(currNodeAmount))
 	fmt.Println("Current Nodes:" + strconv.Itoa(int(currNodeAmount)))
-}
-
-type TopologyObject struct {
-	core.QObject
-
-	_ int64 `property:"nodeAmount"`
-
-	// _ func() `signal:"increased,auto"`
-	// _ func() `signal:"decreased,auto"`
-}
-
-func (t *TopologyObject) init() {
-	i := 5
-	var i64 int64
-	i64 = int64(i)
-	t.SetNodeAmount(i64)
-	currNodeAmount = 5
 }
 
 var currNodeAmount int64
 var model = NewNodeModel(nil)
+
+// const StartingNodes int64 = 2
+const MinNodes int64 = 2
+const MaxNodes int64 = 16
 
 func main() {
 
@@ -88,10 +75,9 @@ func main() {
 	// and let the root item of the view resize itself to the size of the view automatically
 	view := quick.NewQQuickView(nil)
 
-	for i := 0; i < 16; i++ {
+	for i := 0; i < int(MinNodes); i++ {
 		var n = NewNode(nil)
-
-		n.SetNodeName("RECEIVED!")
+		n.SetNodeName("Node " + strconv.Itoa(int(i)))
 		n.SetNodeMessage("N/A")
 		model.addNode(n)
 	}
@@ -112,12 +98,20 @@ func main() {
 	// you can also load a local file like this instead:
 	//view.SetSource(core.QUrl_FromLocalFile("./qml/main.qml"))
 
-	// go func {
-	// 	time.sleep(2 * time.Seconds)
-
-	// }
 	// make the view visible
 	view.Show()
+
+	// NOTE:
+	// In a go routine: this is ideally how you would
+	// automatically add / edit / remove nodes
+	// go func() {
+	// 	time.Sleep(5 * time.Second)
+	// 	var w = NewNode(nil)
+	// 	w.SetNodeName("Node 2")
+	// 	w.SetNodeMessage("N/A")
+	// 	model.AddNode(w)
+
+	// }()
 
 	// start the main Qt event loop
 	// and block until app.Exit() is called
